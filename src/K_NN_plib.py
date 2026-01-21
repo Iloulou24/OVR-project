@@ -1,7 +1,8 @@
 from math import sqrt
 '''si pas précisé les tuples peuvent être remplacée pas de listes'''
 
-def même_longueur(point,liste_de_points):
+
+def même_longueur(point, liste_de_points):
     '''
     modifie les coordonnées d'un point en rajoutant des dimensions(0)
     Arguments :
@@ -15,19 +16,17 @@ def même_longueur(point,liste_de_points):
         le point (en tuple) est la liste de point de même dimension
     '''
     if type(point) == tuple:
-        point=list(point)
-    while len(point)!=len(liste_de_points[1][0]):
-        if len(point)<len(liste_de_points[1][0]):
+        point = list(point)
+    while len(point) != len(liste_de_points[1][0]):
+        if len(point) < len(liste_de_points[1][0]):
             point.append(0)
         else:
-            for i in range (len(liste_de_points)):
+            for i in range(len(liste_de_points)):
                 liste_de_points[i][0].append(0)
-    return tuple(point),liste_de_points
+    return tuple(point), liste_de_points
 
 
-
-
-def distance_euclidienne(point_a,point_b):
+def distance_euclidienne(point_a, point_b):
     ''' Retourne la distance euclidienne entre deux points.
         Les points sont représentés par des tuples ou des listes de nombres.
         Le nombre de dimensions doit être le même pour les deux points.
@@ -37,15 +36,14 @@ def distance_euclidienne(point_a,point_b):
         Retourne :
             float : La distance euclidienne entre point_a et point_b.
     '''
-    somme_carre=0
+    somme_carre = 0
     for i in range(len(point_a)):
-        difference_au_carre=(point_a[i]-point_b[i])**2
-        somme_carre+=difference_au_carre
+        difference_au_carre = (point_a[i]-point_b[i])**2
+        somme_carre += difference_au_carre
     return sqrt(somme_carre)
 
 
-
-def trouver_k_plus_proches_voisins(point_cible,donnees_entrainement,k):
+def trouver_k_plus_proches_voisins(point_cible, donnees_entrainement, k):
     '''trouve les k points les plus proches du point cible en fonction
        d'une liste de points donnée
        Argument:
@@ -55,14 +53,13 @@ def trouver_k_plus_proches_voisins(point_cible,donnees_entrainement,k):
        Retourne:
             list: Une liste des k tuples (point, classe) représentant les voisins les plus proches.
     '''
-    liste_distance=[]
-    for i in range (len(donnees_entrainement)):
-        liste_distance.append((distance_euclidienne(point_cible,donnees_entrainement[i][0]),donnees_entrainement[i]))
+    liste_distance = []
+    for i in range(len(donnees_entrainement)):
+        liste_distance.append((distance_euclidienne(
+            point_cible, donnees_entrainement[i][0]), donnees_entrainement[i]))
     liste_distance.sort()
-    liste_k_voisins=[liste_distance[i][1] for i in range(k)]
+    liste_k_voisins = [liste_distance[i][1] for i in range(k)]
     return liste_k_voisins
-
-
 
 
 def vote(voisins):
@@ -73,20 +70,16 @@ def vote(voisins):
         Retourne:
             classe majoritaire : caractère
     '''
-    dico_voisin={}
+    dico_voisin = {}
     for v in voisins:
         if v[1] in dico_voisin:
-            dico_voisin[v[1]]+=1
-        else :
-            dico_voisin[v[1]]=1
-    return max(dico_voisin, key=dico_voisin.get)
+            dico_voisin[v[1]] += 1
+        else:
+            dico_voisin[v[1]] = 1
+    return max(dico_voisin, key=dico_voisin.get)  # type: ignore
 
 
-
-
-
-def determiner_classe(point_cible,donnees_entrainement,k):
-    voisins = trouver_k_plus_proches_voisins(point_cible,donnees_entrainement,k)
-    return vote(voisins),k
-
-
+def determiner_classe(point_cible, donnees_entrainement, k):
+    voisins = trouver_k_plus_proches_voisins(
+        point_cible, donnees_entrainement, k)
+    return vote(voisins), k
